@@ -1,0 +1,242 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with sign up and account information.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the user.",
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "description": "Full name of the user.",
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "maxLength": 120
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone number for pickup coordination.",
+          "maxLength": 20
+        },
+        "houseNo": {
+          "type": "string",
+          "description": "House or Flat or Apartment number.",
+          "maxLength": 50
+        },
+        "address": {
+          "type": "string",
+          "description": "Street, colony, or society address.",
+          "maxLength": 200
+        },
+        "city": {
+          "type": "string",
+          "description": "City or town.",
+          "maxLength": 60
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of the user, e.g. Resident, Student, Collector.",
+          "maxLength": 30
+        },
+        "avatarInitials": {
+          "type": "string",
+          "description": "Initials for avatar display.",
+          "maxLength": 4
+        },
+        "points": {
+          "type": "number",
+          "description": "Total earned reward points balance."
+        },
+        "totalWasteKg": {
+          "type": "number",
+          "description": "Total kilograms of scrap waste recycled."
+        },
+        "totalItemsDonated": {
+          "type": "number",
+          "description": "Total count of reusable items donated."
+        },
+        "moneyEarned": {
+          "type": "number",
+          "description": "Total monetary earnings in Rupees."
+        },
+        "joinedDate": {
+          "type": "string",
+          "description": "Human readable date the user registered.",
+          "maxLength": 40
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when user was created.",
+          "maxLength": 50
+        }
+      },
+      "required": ["id", "name", "email", "phone", "houseNo", "address", "city"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Previous and active user orders/pickups detailing date, time, payment, who collected, and where.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the order.",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "ID of the user who placed this order.",
+          "maxLength": 128
+        },
+        "orderNumber": {
+          "type": "string",
+          "description": "Display order reference number.",
+          "maxLength": 40
+        },
+        "type": {
+          "type": "string",
+          "enum": ["scrap", "donation"],
+          "description": "Order type: scrap sale or donation."
+        },
+        "targetId": {
+          "type": "string",
+          "description": "Identifier of the assigned collector or NGO.",
+          "maxLength": 64
+        },
+        "targetName": {
+          "type": "string",
+          "description": "Who performed/is performing the pickup (Collector or NGO name).",
+          "maxLength": 120
+        },
+        "targetRole": {
+          "type": "string",
+          "description": "Role of the pickup partner.",
+          "maxLength": 40
+        },
+        "targetPhone": {
+          "type": "string",
+          "description": "Contact phone of the collector or NGO.",
+          "maxLength": 30
+        },
+        "targetAddress": {
+          "type": "string",
+          "description": "Base hub or registered address of the pickup partner.",
+          "maxLength": 200
+        },
+        "targetVehicle": {
+          "type": "string",
+          "description": "Vehicle used for collection.",
+          "maxLength": 80
+        },
+        "itemName": {
+          "type": "string",
+          "description": "Summary or title of the materials collected.",
+          "maxLength": 150
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of waste or donation.",
+          "maxLength": 50
+        },
+        "weightOrQty": {
+          "type": "string",
+          "description": "Weight or item count, e.g. 12.0 kg or 5 units.",
+          "maxLength": 40
+        },
+        "estimatedValue": {
+          "type": "number",
+          "description": "Initial estimated payout or valuation in Rupees."
+        },
+        "finalAmount": {
+          "type": "number",
+          "description": "Final settlement amount paid to user in Rupees."
+        },
+        "paymentStatus": {
+          "type": "string",
+          "enum": ["paid_upi", "cash_collected", "free_donation", "pending", "credited_wallet"],
+          "description": "Payment resolution status."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Payment method used, e.g. Instant UPI, Cash on Spot, Donation Receipt.",
+          "maxLength": 60
+        },
+        "paymentReference": {
+          "type": "string",
+          "description": "UPI transaction ID or receipt reference.",
+          "maxLength": 60
+        },
+        "pickupAddress": {
+          "type": "string",
+          "description": "Where the pickup was done (street and society).",
+          "maxLength": 250
+        },
+        "pickupHouseNo": {
+          "type": "string",
+          "description": "House/flat number where pickup took place.",
+          "maxLength": 60
+        },
+        "pickupCity": {
+          "type": "string",
+          "description": "City where pickup took place.",
+          "maxLength": 60
+        },
+        "date": {
+          "type": "string",
+          "description": "Calendar date of pickup.",
+          "maxLength": 40
+        },
+        "timeSlot": {
+          "type": "string",
+          "description": "Time slot or specific collection time.",
+          "maxLength": 50
+        },
+        "completedAt": {
+          "type": "string",
+          "description": "Completion timestamp.",
+          "maxLength": 50
+        },
+        "status": {
+          "type": "string",
+          "enum": ["scheduled", "confirmed", "on_the_way", "collected", "completed", "cancelled"],
+          "description": "Status of the order in the lifecycle."
+        },
+        "pointsEarned": {
+          "type": "number",
+          "description": "Reward points credited for this pickup."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Special pickup instructions or doorstep remarks.",
+          "maxLength": 300
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp.",
+          "maxLength": 50
+        }
+      },
+      "required": ["id", "userId", "type", "targetName", "itemName", "date", "timeSlot", "pickupAddress", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/User"
+      },
+      "description": "Stores user sign-up details, household address, and eco balance stats."
+    },
+    "/orders/{orderId}": {
+      "schema": {
+        "$ref": "#/entities/Order"
+      },
+      "description": "Stores previous and active user orders with date, time, payment, who performed pickup, and where."
+    }
+  }
+}

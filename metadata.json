@@ -1,0 +1,8 @@
+{
+  "name": "Remix RELIVE — Waste to Worth",
+  "description": "Waste management platform with persistent Firestore database: register user sign up information, track previous order timeline with dates, times, payments, collector (who) and location (where), and redeem vouchers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,77 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'name', 'email', 'phone', 'houseNo', 'address', 'city'])
+        && data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.email is string && data.email.size() > 0 && data.email.size() <= 120
+        && data.phone is string && data.phone.size() > 0 && data.phone.size() <= 20
+        && data.houseNo is string && data.houseNo.size() > 0 && data.houseNo.size() <= 60
+        && data.address is string && data.address.size() > 0 && data.address.size() <= 250
+        && data.city is string && data.city.size() > 0 && data.city.size() <= 60;
+    }
+
+    function isValidOrder(data) {
+      return data.keys().hasAll(['id', 'userId', 'type', 'targetName', 'itemName', 'date', 'timeSlot', 'pickupAddress', 'status'])
+        && data.id is string && data.id.size() <= 128
+        && data.userId is string && data.userId.size() <= 128
+        && data.type in ['scrap', 'donation']
+        && data.targetName is string && data.targetName.size() <= 120
+        && data.itemName is string && data.itemName.size() <= 150
+        && data.date is string && data.date.size() <= 50
+        && data.timeSlot is string && data.timeSlot.size() <= 50
+        && data.pickupAddress is string && data.pickupAddress.size() <= 250
+        && data.status in ['scheduled', 'confirmed', 'on_the_way', 'collected', 'completed', 'cancelled'];
+    }
+
+    // Connection test document
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    // User profiles & sign up data
+    match /users/{userId} {
+      allow get: if isValidId(userId);
+      allow list: if isSignedIn();
+      allow create: if isValidId(userId) && isValidUser(incoming());
+      allow update: if isValidId(userId) && isValidUser(incoming());
+      allow delete: if false;
+    }
+
+    // Previous and active orders timeline
+    match /orders/{orderId} {
+      allow get: if isValidId(orderId);
+      allow list: if true;
+      allow create: if isValidId(orderId) && isValidOrder(incoming());
+      allow update: if isValidId(orderId) && isValidOrder(incoming());
+      allow delete: if isValidId(orderId);
+    }
+  }
+}
